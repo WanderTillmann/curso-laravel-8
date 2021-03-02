@@ -48,9 +48,12 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        if (!$post = Post::find($id))
+            return redirect()->route('posts.index');
+
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -82,8 +85,15 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        if (!$post = Post::find($id))
+            return redirect()->back();
+
+        $post->delete();
+
+        return redirect()
+            ->route('posts.index')
+            ->with('message', 'Post deletada com sucesso');
     }
 }
