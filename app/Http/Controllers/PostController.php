@@ -15,7 +15,6 @@ class PostController extends Controller
      */
     public function index()
     {
-
         $posts = Post::get();
         return view('admin.posts.index', compact('posts'));
     }
@@ -39,7 +38,9 @@ class PostController extends Controller
     public function store(StoreUpdatePostRequest $request)
     {
         Post::create($request->all());
-        return redirect()->route('posts.index');
+        return redirect()
+            ->route('posts.index')
+            ->with('message', 'Post criado com sucesso!');
     }
 
     /**
@@ -62,9 +63,12 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        //
+        if (!$post = Post::find($id))
+            return redirect()->back();
+
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -74,9 +78,17 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(StoreUpdatePostRequest $request, $id)
     {
-        //
+        if (!$post = Post::find($id)) {
+            return redirect()->back();
+        }
+
+        $post->update($request->all());
+
+        return redirect()
+            ->route('posts.index')
+            ->with('message', 'Post atualizado com sucesso!');
     }
 
     /**
