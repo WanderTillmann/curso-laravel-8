@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::get();
+        $posts = Post::paginate(1);
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -107,5 +107,14 @@ class PostController extends Controller
         return redirect()
             ->route('posts.index')
             ->with('message', 'Post deletada com sucesso');
+    }
+
+    public function search(Request $request)
+    {
+        $filters = $request->except('_toker');
+        $posts = Post::where('title', '=', $request->search)
+            ->orWhere('content', 'LIKE', "%{$request->search}%")
+            ->paginate(1);
+        return view("admin.posts.index", compact('posts', 'filters'));
     }
 }
