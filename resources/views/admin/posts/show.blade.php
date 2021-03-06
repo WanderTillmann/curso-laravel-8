@@ -1,3 +1,8 @@
+@extends('admin.posts.app')
+
+@section('title', 'Detalhes do Post')
+
+@section('content')
 <h1>Detalhes do Post {{ $post->title }}</h1>
 
 <ul>
@@ -8,4 +13,6 @@
     @csrf
     @method('DELETE')
     <button type="submit">Deletar o post</button>
-</form>
+</form>  
+@endsection
+
